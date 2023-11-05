@@ -11,7 +11,8 @@ Este proyecto implementa un microservicio REST para consultar la información b�
 - Contiene configuración de Docker para desplegar como contenedor.
 
 ## Requerimientos
-- Java 8
+- Java 11.0.20
+- Web flux
 - Maven
 - Docker (opcional)
 
