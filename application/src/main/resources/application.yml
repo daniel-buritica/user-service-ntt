@@ -1,0 +1,16 @@
+server:
+  port: ${PORT:8090}
+  origin: ${ORIGIN:*}
+  error:
+    include:
+      always
+spring:
+  application:
+    name: "user-service"
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+    path: /swagger-doc/v3/api-docs
+  swagger-ui:
+    path: /swagger-doc/swagger-ui.html
