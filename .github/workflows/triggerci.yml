@@ -218,8 +218,10 @@ jobs:
         if: ${{ env.REGISTRY == 'docker.io' }}
         uses: docker/login-action@v3
         with:
+          registry: docker.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+        continue-on-error: false
 
       - name: Log in to Quay.io
         if: ${{ env.REGISTRY == 'quay.io' }}

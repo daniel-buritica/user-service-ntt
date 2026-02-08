@@ -38,7 +38,16 @@ Valor: tu_token_dockerhub
 1. Ve a https://hub.docker.com/settings/security
 2. Click en **New Access Token**
 3. Dale un nombre (ej: "github-actions")
-4. Copia el token generado
+4. **IMPORTANTE**: Selecciona el permiso **Read & Write** (no solo Read)
+5. Click en **Generate**
+6. **IMPORTANTE**: Copia el token inmediatamente, ya que solo se muestra una vez
+7. Pega el token en el secret `DOCKERHUB_TOKEN` de GitHub
+
+**⚠️ Nota**: Si el token no tiene permisos de escritura, verás el error:
+```
+401 Unauthorized: access token has insufficient scopes
+```
+En ese caso, elimina el token anterior y crea uno nuevo con permisos **Read & Write**.
 
 ### 1.3 Configurar Secrets de Quay.io (Alternativa)
 
@@ -272,11 +281,17 @@ kubectl get service -n default
 
 ## 🔍 Troubleshooting
 
-### Problema: Pipeline falla en "Docker login"
+### Problema: Pipeline falla en "Docker login" o "access token has insufficient scopes"
 
 **Solución:**
 - Verifica que los secrets `DOCKERHUB_USERNAME` y `DOCKERHUB_TOKEN` estén configurados
-- Verifica que el token tenga permisos de escritura
+- **IMPORTANTE**: El token debe tener permisos de **Read & Write**, no solo Read
+- Si ves el error `401 Unauthorized: access token has insufficient scopes`:
+   1. Ve a https://hub.docker.com/settings/security
+   2. Elimina el token anterior (si existe)
+   3. Crea un nuevo token con permisos **Read & Write**
+   4. Actualiza el secret `DOCKERHUB_TOKEN` en GitHub con el nuevo token
+   5. Verifica que el `DOCKERHUB_USERNAME` sea correcto (debe ser tu usuario de DockerHub, no tu email)
 
 ### Problema: Coverage < 80%
 
