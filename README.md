@@ -1,5 +1,6 @@
 # Servicio de usuario
 
+
 Este proyecto implementa un microservicio REST para consultar la información básica de un usuario.
 
 ## Características
