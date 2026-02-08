@@ -66,20 +66,64 @@ Valor: tu_token_quay
 2. Click en **Generate Encrypted Password**
 3. Copia el token generado
 
-### 1.4 Configurar SonarQube (Opcional)
+### 1.4 Configurar SonarCloud (Opcional)
 
-Si quieres usar SonarQube:
+Si quieres usar SonarCloud para análisis de código:
+
+**Paso 1: Crear cuenta en SonarCloud**
+1. Ve a https://sonarcloud.io
+2. Click en **Log in** y autentícate con tu cuenta de GitHub
+3. Autoriza a SonarCloud para acceder a tus repositorios
+
+**Paso 2: Crear una Organización**
+1. En SonarCloud, ve a **My Account** → **Organizations**
+2. Click en **Create Organization**
+3. Elige el plan (Free plan es suficiente para proyectos personales)
+4. Completa la información de la organización
+5. **Copia el nombre de tu organización** (lo necesitarás después)
+
+**Paso 3: Crear un Proyecto**
+1. En SonarCloud, ve a **Projects** → **+** (Create Project)
+2. Selecciona **Analyze a new project**
+3. Selecciona tu organización
+4. Selecciona **GitHub** como proveedor
+5. Selecciona tu repositorio: `daniel-buritica/user-service-ntt`
+6. SonarCloud creará automáticamente el proyecto
+7. **Copia el Project Key** (aparece en la configuración del proyecto, formato: `organizacion_repositorio`)
+
+**Paso 4: Generar Token**
+1. En SonarCloud, ve a **My Account** → **Security**
+2. En la sección **Generate Tokens**, ingresa un nombre (ej: "github-actions")
+3. Click en **Generate**
+4. **Copia el token inmediatamente** (solo se muestra una vez)
+
+**Paso 5: Configurar Secrets en GitHub**
+Ve a tu repositorio en GitHub → **Settings** → **Secrets and variables** → **Actions** y crea:
 
 ```
 Nombre: SONAR_TOKEN
-Valor: tu_token_sonarqube
+Valor: [el token que copiaste en el paso 4]
 
 Nombre: SONAR_HOST_URL
-Valor: https://sonarcloud.io (o tu instancia)
+Valor: https://sonarcloud.io
 
 Nombre: SONAR_ORGANIZATION
-Valor: tu_organizacion_sonar
+Valor: [el nombre de tu organización del paso 2]
+
+Nombre: SONAR_PROJECT_KEY (opcional)
+Valor: [el project key del paso 3, si no se usa, se usará github.repository]
 ```
+
+**Paso 6: Ver los Reportes**
+1. Ve a https://sonarcloud.io/projects
+2. Deberías ver tu proyecto listado
+3. Click en el proyecto para ver el análisis completo
+4. Los reportes se actualizan automáticamente después de cada push a `main`
+
+**Nota**: Si no ves el proyecto después de ejecutar el pipeline:
+- Verifica que los secrets estén configurados correctamente
+- Revisa los logs del workflow en GitHub Actions
+- Asegúrate de que el token tenga permisos para crear proyectos
 
 ---
 
@@ -184,19 +228,19 @@ Asegúrate de que estos archivos estén presentes:
 1. Ve a la pestaña **Actions** en GitHub
 2. Deberías ver el workflow ejecutándose
 3. Revisa cada job:
-   - ✅ `test` - Debe pasar con cobertura ≥80%
-   - ✅ `static-analysis` - Debe completarse
-   - ✅ `dynamic-analysis` - Debe completarse
-   - ✅ `composition-analysis` - Debe generar SBOM
-   - ✅ `build-and-push` - Debe construir y subir imagen
-   - ✅ `update-gitops` - Debe actualizar values.yaml
+    - ✅ `test` - Debe pasar con cobertura ≥80%
+    - ✅ `static-analysis` - Debe completarse
+    - ✅ `dynamic-analysis` - Debe completarse
+    - ✅ `composition-analysis` - Debe generar SBOM
+    - ✅ `build-and-push` - Debe construir y subir imagen
+    - ✅ `update-gitops` - Debe actualizar values.yaml
 
 ### 4.2 Verificar Imagen Docker
 
 1. Ve a DockerHub/Quay.io
 2. Deberías ver la imagen `user-service` con tags:
-   - `main-<commit-sha>` (ej: `main-a1b2c3d`)
-   - `latest` (solo en main)
+    - `main-<commit-sha>` (ej: `main-a1b2c3d`)
+    - `latest` (solo en main)
 
 ### 4.3 Verificar Actualización de values.yaml
 
@@ -230,9 +274,9 @@ kubectl apply -f argocd/application.yaml -n argocd
 1. Accede al dashboard de ArgoCD
 2. Deberías ver la aplicación `user-service`
 3. Verifica que:
-   - ✅ Estado: `Synced` y `Healthy`
-   - ✅ Source: Apunta a tu repositorio
-   - ✅ Destination: Apunta a tu cluster/namespace
+    - ✅ Estado: `Synced` y `Healthy`
+    - ✅ Source: Apunta a tu repositorio
+    - ✅ Destination: Apunta a tu cluster/namespace
 
 ### 5.3 Verificar Despliegue en Kubernetes
 
@@ -266,9 +310,9 @@ kubectl get service -n default
 1. Ve a **Actions** en GitHub
 2. Observa cómo se ejecuta el pipeline
 3. Verifica que:
-   - ✅ Todos los jobs pasen
-   - ✅ La imagen se construya con nuevo tag
-   - ✅ `values.yaml` se actualice automáticamente
+    - ✅ Todos los jobs pasen
+    - ✅ La imagen se construya con nuevo tag
+    - ✅ `values.yaml` se actualice automáticamente
 
 ### 6.3 Verificar Sincronización de ArgoCD
 
@@ -287,11 +331,11 @@ kubectl get service -n default
 - Verifica que los secrets `DOCKERHUB_USERNAME` y `DOCKERHUB_TOKEN` estén configurados
 - **IMPORTANTE**: El token debe tener permisos de **Read & Write**, no solo Read
 - Si ves el error `401 Unauthorized: access token has insufficient scopes`:
-   1. Ve a https://hub.docker.com/settings/security
-   2. Elimina el token anterior (si existe)
-   3. Crea un nuevo token con permisos **Read & Write**
-   4. Actualiza el secret `DOCKERHUB_TOKEN` en GitHub con el nuevo token
-   5. Verifica que el `DOCKERHUB_USERNAME` sea correcto (debe ser tu usuario de DockerHub, no tu email)
+    1. Ve a https://hub.docker.com/settings/security
+    2. Elimina el token anterior (si existe)
+    3. Crea un nuevo token con permisos **Read & Write**
+    4. Actualiza el secret `DOCKERHUB_TOKEN` en GitHub con el nuevo token
+    5. Verifica que el `DOCKERHUB_USERNAME` sea correcto (debe ser tu usuario de DockerHub, no tu email)
 
 ### Problema: Coverage < 80%
 
@@ -318,6 +362,35 @@ kubectl get service -n default
 - Verifica que la imagen se haya subido correctamente al registry
 - Verifica que el `image.repository` en `values.yaml` sea correcto
 - Verifica que el tag coincida con el commit SHA
+
+### Problema: No veo mi proyecto en SonarCloud
+
+**Solución:**
+1. **Verifica que el proyecto esté creado en SonarCloud:**
+    - Ve a https://sonarcloud.io/projects
+    - Si no ves tu proyecto, créalo manualmente (ver sección 1.4)
+
+2. **Verifica los secrets de GitHub:**
+    - `SONAR_TOKEN` debe ser un token válido de SonarCloud
+    - `SONAR_HOST_URL` debe ser `https://sonarcloud.io`
+    - `SONAR_ORGANIZATION` debe ser el nombre exacto de tu organización
+
+3. **Verifica los logs del workflow:**
+    - Ve a **Actions** en GitHub
+    - Revisa el job `static-analysis`
+    - Busca errores relacionados con SonarQube
+
+4. **Verifica que el análisis se haya ejecutado:**
+    - El paso "Run SonarQube Scan" debe completarse sin errores
+    - Si ves "⚠️ SonarQube not configured", verifica los secrets
+
+5. **Espera unos minutos:**
+    - SonarCloud puede tardar 1-2 minutos en procesar y mostrar el análisis
+
+6. **Verifica el Project Key:**
+    - El Project Key en SonarCloud debe coincidir con el que usas en los secrets
+    - Por defecto, se usa `github.repository` (formato: `usuario/repositorio`)
+    - Puedes verificar el Project Key en: SonarCloud → Tu Proyecto → Project Settings → Key
 
 ---
 
