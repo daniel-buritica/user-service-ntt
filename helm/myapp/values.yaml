@@ -7,7 +7,7 @@ replicaCount: 2
 image:
   repository: docker.io/dburitic/user-service
   pullPolicy: IfNotPresent
-  tag: ""  # Se actualizará automáticamente con el commit SHA en el pipeline
+  tag: "e15f4c9"
 
 imagePullSecrets: []
 nameOverride: ""
