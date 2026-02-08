@@ -1,0 +1,20 @@
+# CODEOWNERS file
+# This file defines code owners for the repository
+# Code owners will be automatically requested for review on pull requests
+
+# Default owner for all files
+* @YOUR_GITHUB_USERNAME
+
+# Specific owners for critical paths
+/.github/workflows/ @YOUR_GITHUB_USERNAME
+/helm/ @YOUR_GITHUB_USERNAME
+/argocd/ @YOUR_GITHUB_USERNAME
+
+# Application code
+/application/ @YOUR_GITHUB_USERNAME
+/domain/ @YOUR_GITHUB_USERNAME
+/infrastructure/ @YOUR_GITHUB_USERNAME
+
+# Configuration files
+/pom.xml @YOUR_GITHUB_USERNAME
+/deployment/ @YOUR_GITHUB_USERNAME
