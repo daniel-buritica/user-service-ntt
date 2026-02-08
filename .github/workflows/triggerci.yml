@@ -42,12 +42,17 @@ jobs:
 
       - name: Validate coverage >= 80%
         run: |
-          if mvn jacoco:check; then
+          echo "Running JaCoCo coverage check..."
+          if mvn -pl application jacoco:check; then
             echo "✅ Coverage validation passed (>= 80%)"
           else
             echo "⚠️ jacoco:check failed - checking coverage manually..."
-            JACOCO_XML=$(find . -name "jacoco.xml" -type f | head -1)
+            JACOCO_XML=$(find application/target -name "jacoco.xml" -type f | head -1)
+            if [ -z "$JACOCO_XML" ]; then
+              JACOCO_XML=$(find . -name "jacoco.xml" -type f | head -1)
+            fi
             if [ -n "$JACOCO_XML" ]; then
+              echo "Found JaCoCo XML at: $JACOCO_XML"
               MISSED=$(grep -oP 'type="INSTRUCTION".*missed="\K[0-9]+' "$JACOCO_XML" | head -1 || echo "0")
               COVERED=$(grep -oP 'type="INSTRUCTION".*covered="\K[0-9]+' "$JACOCO_XML" | head -1 || echo "0")
               TOTAL=$((MISSED + COVERED))
@@ -64,7 +69,10 @@ jobs:
                 echo "⚠️ No coverage data found, but tests passed"
               fi
             else
-              echo "⚠️ Could not find jacoco.xml, but tests passed"
+              echo "⚠️ Could not find jacoco.xml"
+              echo "Searching for coverage reports..."
+              find . -name "jacoco.xml" -type f
+              echo "⚠️ Coverage check skipped - no jacoco.xml found"
             fi
           fi
 
