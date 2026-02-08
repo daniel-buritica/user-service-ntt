@@ -4,6 +4,7 @@ Este proyecto implementa un microservicio REST para consultar la información b�
 
 ## 🚀 Características
 
+
 - **Arquitectura Hexagonal**: Implementación con Clean Architecture para mantener desacoplados los componentes
 - **Spring Boot 3.2.0**: Framework reactivo con WebFlux
 - **Java 21**: Última versión LTS
