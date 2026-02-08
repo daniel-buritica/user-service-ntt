@@ -52,4 +52,4 @@ spec:
     - name: Description
       value: User Service Application deployed via GitOps with ArgoCD
     - name: Repository
-      value: https://github.com/USERNAME/REPO_NAME.git
+      value: https://github.com/daniel-buritica/user-service-ntt.git

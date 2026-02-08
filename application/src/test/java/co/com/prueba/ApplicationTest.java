@@ -1,5 +1,6 @@
 package co.com.prueba;
 
+import co.com.prueba.model.exception.CustomException;
 import co.com.prueba.model.user.UserRequest;
 import co.com.prueba.model.user.UserResponse;
 import co.com.prueba.model.user.gateway.UserRepository;
@@ -10,10 +11,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,10 +51,12 @@ public class ApplicationTest {
 
     @Test
     public void testFindUserByDocumentOk() {
-        when(userRepository.findByUser(request)).thenReturn(Mono.just(response));
+        when(userRepository.findByUser(argThat(req ->
+                "C".equals(req.getDocumentType()) && "23445322".equals(req.getDocumentNumber())
+        ))).thenReturn(Mono.just(response));
 
         webTestClient.get()
-                .uri("http://localhost:8090/api/v1/user?documentType=C&documentNumber=23445322")
+                .uri("/api/v1/user?documentType=C&documentNumber=23445322")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -68,21 +74,25 @@ public class ApplicationTest {
     @Test
     public void testFindNotUserByNotDocument() {
         webTestClient.get()
-                .uri("http://localhost:8090/api/v1/user?documentType=A&documentNumber=12345")
+                .uri("/api/v1/user?documentType=A&documentNumber=12345")
                 .exchange()
                 .expectStatus().isBadRequest();
     }
     @Test
     public void testFindUserByNotDocument() {
         webTestClient.get()
-                .uri("http://localhost:8090/api/v1/user?documentType=A&documentNumber=2344532")
+                .uri("/api/v1/user?documentType=A&documentNumber=2344532")
                 .exchange()
                 .expectStatus().isBadRequest();
     }
     @Test
     public void testFindNotUserByDocument() {
+        when(userRepository.findByUser(argThat(req ->
+                "C".equals(req.getDocumentType()) && "12345".equals(req.getDocumentNumber())
+        ))).thenReturn(Mono.error(new CustomException(HttpStatus.NOT_FOUND, "No existe el usuario.")));
+
         webTestClient.get()
-                .uri("http://localhost:8090/api/v1/user?documentType=C&documentNumber=12345")
+                .uri("/api/v1/user?documentType=C&documentNumber=12345")
                 .exchange()
                 .expectStatus().isNotFound();
     }
