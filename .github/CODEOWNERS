@@ -1,0 +1,20 @@
+# CODEOWNERS file
+# This file defines code owners for the repository
+# Code owners will be automatically requested for review on pull requests
+
+# Default owner for all files (cualquier cambio te notificará a ti)
+* @daniel-buritica
+
+# Specific owners for critical paths
+/.github/workflows/ @daniel-buritica
+/helm/ @daniel-buritica
+/argocd/ @daniel-buritica
+
+# Application code
+/application/ @daniel-buritica
+/domain/ @daniel-buritica
+/infrastructure/ @daniel-buritica
+
+# Configuration files
+/pom.xml @daniel-buritica
+/deployment/ @daniel-buritica
