@@ -16,7 +16,7 @@
         <java.version>21</java.version>
         <spring-boot.version>3.2.0</spring-boot.version>
     </properties>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -28,7 +28,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <dependencies>
         <!-- Spring Boot Starters -->
         <dependency>
@@ -44,13 +44,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- Spring Context (from model module) -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
-        
+
         <!-- Validation (from model module) -->
         <dependency>
             <groupId>jakarta.validation</groupId>
@@ -60,7 +60,7 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
-        
+
         <!-- Reactor -->
         <dependency>
             <groupId>io.projectreactor</groupId>
@@ -73,7 +73,7 @@
             <version>3.5.4</version>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -81,13 +81,13 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-        
+
         <!-- Logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -98,7 +98,7 @@
             <artifactId>log4j-core</artifactId>
             <version>2.19.0</version>
         </dependency>
-        
+
         <!-- SpringDoc OpenAPI -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -110,7 +110,7 @@
             <artifactId>springdoc-openapi-webflux-core</artifactId>
             <version>1.6.4</version>
         </dependency>
-        
+
         <!-- JUnit (for tests) -->
         <dependency>
             <groupId>junit</groupId>
@@ -131,7 +131,7 @@
                     <release>21</release>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -160,7 +160,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-maven-plugin</artifactId>
@@ -177,7 +177,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -189,6 +189,22 @@
                         <!-- Excluir Application main class -->
                         <exclude>**/Application.class</exclude>
                     </excludes>
+                    <rules>
+                        <rule>
+                            <element>PACKAGE</element>
+                            <limits>
+                                <limit>
+                                    <counter>LINE</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>0.80</minimum>
+                                </limit>
+                            </limits>
+                            <excludes>
+                                <!-- Excluir Application main de la validación -->
+                                <exclude>co.com.prueba.Application</exclude>
+                            </excludes>
+                        </rule>
+                    </rules>
                 </configuration>
                 <executions>
                     <execution>
@@ -210,28 +226,10 @@
                         <goals>
                             <goal>check</goal>
                         </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>PACKAGE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.80</minimum>
-                                        </limit>
-                                    </limits>
-                                    <excludes>
-                                        <!-- Excluir Application main de la validación -->
-                                        <exclude>co.com.prueba.Application</exclude>
-                                    </excludes>
-                                </rule>
-                            </rules>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
