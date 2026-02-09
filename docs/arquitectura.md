@@ -1,112 +1,14 @@
-# 📐 Arquitectura del Proyecto - User Service
+# 🚀 Pipeline CI/CD - Client Service
 
 ## 📋 Resumen Ejecutivo
 
-Este proyecto implementa un microservicio REST para gestión de usuarios utilizando una **Arquitectura Hexagonal (Clean Architecture)** con Spring Boot 3.2.0 y Java 21. El proyecto incluye un pipeline completo de CI/CD con GitHub Actions y despliegue automatizado mediante GitOps con ArgoCD.
+Este proyecto implementa un **pipeline completo de CI/CD** con GitHub Actions para un microservicio Spring Boot. El pipeline incluye pruebas automatizadas, análisis de código, construcción de imágenes Docker, y despliegue automatizado mediante GitOps con ArgoCD.
 
----
-
-## 🏗️ Arquitectura de la Aplicación
-
-### Arquitectura Hexagonal (Ports & Adapters)
-
-El proyecto sigue los principios de la Arquitectura Hexagonal, también conocida como Clean Architecture, que separa la lógica de negocio de los detalles de implementación.
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    INFRASTRUCTURE LAYER                      │
-│  ┌──────────────────────┐      ┌──────────────────────┐    │
-│  │   Entry Points        │      │  Driven Adapters     │    │
-│  │   (REST Controllers)  │      │  (External Services) │    │
-│  └──────────────────────┘      └──────────────────────┘    │
-│           │                              │                    │
-└───────────┼──────────────────────────────┼────────────────────┘
-            │                              │
-            ▼                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    APPLICATION LAYER                         │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │         Application Configuration & Orchestration    │   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-            │                              │
-            ▼                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      DOMAIN LAYER                            │
-│  ┌──────────────────────┐      ┌──────────────────────┐    │
-│  │   Domain Models      │      │   Use Cases          │    │
-│  │   (Entities, DTOs)   │      │   (Business Logic)   │    │
-│  └──────────────────────┘      └──────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Capas del Proyecto
-
-El proyecto sigue una arquitectura hexagonal pero implementada en un **mono-módulo Maven** para simplificar la estructura y facilitar el mantenimiento.
-
-#### 1. **Domain Layer** (`src/main/java/co/com/prueba/model/` y `usecase/`)
-Contiene la lógica de negocio pura, independiente de frameworks y tecnologías.
-
-- **`model/`**: Modelos de dominio, entidades, DTOs y excepciones
-  - `UserRequest`, `UserResponse`
-  - `DocumentType`
-  - `CustomException`, `CustomAttribute`
-  - Interfaces de repositorio (`UserRepository`)
-
-- **`usecase/`**: Casos de uso que implementan la lógica de negocio
-  - `UserUseCase`: Lógica para consultar usuarios
-
-#### 2. **Application Layer** (`src/main/java/co/com/prueba/`)
-Orquesta los casos de uso y configura la aplicación.
-
-- `Application.java`: Punto de entrada principal
-- `config/ApplicationConfig.java`: Configuración de Spring Boot
-- `src/main/resources/application.yml`: Configuración de la aplicación
-
-#### 3. **Infrastructure Layer** (`src/main/java/co/com/prueba/entrypoints/` y `adapter/`)
-Implementa los adaptadores que conectan la aplicación con el mundo exterior.
-
-- **`entrypoints/`**: Puntos de entrada (REST API)
-  - `router/UserRouter`: Configuración de rutas WebFlux
-  - `handler/UserHandler`: Manejo de peticiones HTTP
-  - `exception/GlobalExceptionHandler`: Manejo centralizado de excepciones
-
-- **`adapter/`**: Adaptadores para servicios externos
-  - `UserServiceAdapter`: Implementación del repositorio de usuarios
-
----
-
-## 🔄 Flujo de Datos
-
-```
-Cliente HTTP
-    │
-    ▼
-┌─────────────────┐
-│  UserRouter      │  (Entry Point - REST)
-│  (WebFlux)       │
-└────────┬─────────┘
-         │
-         ▼
-┌─────────────────┐
-│  UserHandler     │  (Application Layer)
-└────────┬─────────┘
-         │
-         ▼
-┌─────────────────┐
-│  UserUseCase     │  (Domain Layer - Business Logic)
-└────────┬─────────┘
-         │
-         ▼
-┌─────────────────┐
-│  UserRepository  │  (Domain Interface)
-└────────┬─────────┘
-         │
-         ▼
-┌─────────────────┐
-│ UserServiceAdapter│ (Infrastructure - Implementation)
-└─────────────────┘
-```
+**Artifact ID**: `client-service`  
+**Versión**: `1.0-SNAPSHOT`  
+**Grupo**: `co.com.prueba`  
+**Java**: 21  
+**Spring Boot**: 3.2.0
 
 ---
 
@@ -147,15 +49,9 @@ Cliente HTTP
 │                  ┌──────────────────┐                        │
 │                  │  Update GitOps  │                        │
 │                  │  (values.yaml)   │                        │
-│                  │  (Artifact)      │                        │
+│                  │  (Commit & Push) │                        │
 │                  └────────┬─────────┘                        │
 └───────────────────────────┼──────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    MANUAL STEP                               │
-│                  (Subir values.yaml)                         │
-└───────────────────────────┬──────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
@@ -170,7 +66,7 @@ Cliente HTTP
 │                      ARGOCD                                  │
 │                                                              │
 │  ┌──────────────────────────────────────────────────────┐  │
-│  │  Application: user-service                            │  │
+│  │  Application: client-service                          │  │
 │  │  - Monitorea cambios en Git                           │  │
 │  │  - Sincroniza automáticamente                         │  │
 │  │  - Despliega en Kubernetes                            │  │
@@ -191,10 +87,12 @@ Cliente HTTP
 ### Etapas del Pipeline
 
 #### 1. **Test** (Pruebas Unitarias)
-- Ejecuta pruebas JUnit
+- Ejecuta pruebas JUnit con `mvn clean test verify`
 - Genera reporte de cobertura con JaCoCo (objetivo: ≥80%)
-- Valida que todas las pruebas pasen
-- Publica reportes como artifacts
+- Valida cobertura con `mvn jacoco:check` (configuración de `rules` en el plugin)
+- Si `jacoco:check` falla, realiza validación manual parseando `jacoco.xml`
+- El pipeline falla si la cobertura es < 80%
+- Publica reportes como artifacts (`target/site/jacoco/`, `target/surefire-reports/`)
 
 #### 2. **Static Analysis** (Análisis Estático)
 - Ejecuta CodeQL Analysis (automático de GitHub)
@@ -222,9 +120,10 @@ Cliente HTTP
 
 #### 6. **Update GitOps** (Actualización GitOps)
 - **Solo se ejecuta en push a `main`**
-- Actualiza `helm/myapp/values.yaml` con el nuevo tag (commit SHA)
-- **Genera artifact** con el archivo actualizado (debido a restricción de push)
-- Crea summary con instrucciones para subir manualmente
+- Actualiza `helm/myapp/values.yaml` con el nuevo tag (commit SHA de 7 caracteres)
+- Hace commit y push directo al repositorio con mensaje `[skip ci]`
+- Crea summary con información del tag actualizado
+- ArgoCD detecta automáticamente los cambios y sincroniza
 
 ---
 
@@ -240,31 +139,28 @@ Cliente HTTP
 ### Flujo de Sincronización
 
 ```
-1. Pipeline actualiza values.yaml y genera artifact
+1. Pipeline actualiza values.yaml y hace commit/push
    │
    ▼
-2. Usuario descarga artifact y sube values.yaml a Git
+2. ArgoCD detecta cambio (polling cada 3 minutos)
    │
    ▼
-3. ArgoCD detecta cambio (polling cada 3 minutos)
+3. ArgoCD compara estado deseado vs. actual
    │
    ▼
-4. ArgoCD compara estado deseado vs. actual
+4. ArgoCD aplica cambios (kubectl apply)
    │
    ▼
-5. ArgoCD aplica cambios (kubectl apply)
+5. Kubernetes actualiza Deployment
    │
    ▼
-6. Kubernetes actualiza Deployment
+6. Nuevos Pods se crean con nueva imagen
    │
    ▼
-7. Nuevos Pods se crean con nueva imagen
+7. Health checks verifican que la app esté lista
    │
    ▼
-8. Health checks verifican que la app esté lista
-   │
-   ▼
-9. Service enruta tráfico a nuevos Pods
+8. Service enruta tráfico a nuevos Pods
 ```
 
 ### Configuración de ArgoCD
@@ -293,7 +189,8 @@ ENTRYPOINT ["sh", "-c", "java -jar app.jar"]
 ### Imagen Docker
 - **Base**: Eclipse Temurin 21 JDK Alpine (ligera)
 - **Puerto**: 8090 (configurable vía variable de entorno PORT)
-- **JAR**: `application-1.0-SNAPSHOT.jar`
+- **JAR**: `client-service-1.0-SNAPSHOT.jar` (renombrado a `app.jar` en el contenedor)
+- **Ubicación Dockerfile**: `deployment/Dockerfile`
 
 ---
 
@@ -322,39 +219,31 @@ helm/myapp/
 
 ---
 
-## 📊 Stack Tecnológico
-
-### Backend
-- **Java**: 21 (LTS)
-- **Spring Boot**: 3.2.0
-- **Spring WebFlux**: Framework reactivo
-- **Maven**: Gestión de dependencias
-- **Lombok**: Reducción de boilerplate
-- **Jackson**: Serialización JSON
-
-### Testing
-- **JUnit 5**: Framework de pruebas
-- **Mockito**: Mocking
-- **JaCoCo**: Cobertura de código (≥80%)
+## 📊 Stack Tecnológico CI/CD
 
 ### CI/CD
-- **GitHub Actions**: Automatización
+- **GitHub Actions**: Automatización del pipeline
 - **Docker**: Containerización
 - **Helm**: Gestión de Kubernetes
-- **ArgoCD**: GitOps
+- **ArgoCD**: GitOps y despliegue continuo
 
 ### Infraestructura
 - **Kubernetes**: Orquestación de contenedores
 - **DockerHub/Quay.io**: Registry de imágenes
 
+### Testing
+- **JUnit 5**: Framework de pruebas
+- **JaCoCo**: Cobertura de código (≥80%)
+
 ### Análisis y Seguridad
-- **CodeQL**: Análisis estático
-- **Trivy**: Análisis dinámico de vulnerabilidades
-- **Syft**: Generación de SBOM
+- **CodeQL**: Análisis estático de código
+- **Trivy**: Análisis dinámico de vulnerabilidades en imágenes Docker
+- **Syft**: Generación de SBOM (Software Bill of Materials)
+- **SonarQube**: Análisis de calidad de código (opcional)
 
 ---
 
-## 🔐 Seguridad
+## 🔐 Seguridad en el Pipeline
 
 ### Implementaciones de Seguridad
 
@@ -363,21 +252,6 @@ helm/myapp/
 3. **SBOM**: Inventario de dependencias (Syft)
 4. **Secrets Management**: Variables de entorno en Kubernetes
 5. **Health Checks**: Verificación continua de salud
-
----
-
-## 📈 Escalabilidad
-
-### Estrategias de Escalado
-
-1. **Horizontal Pod Autoscaling (HPA)**: Escalado automático basado en CPU/memoria
-2. **Replicas**: Múltiples instancias para alta disponibilidad
-3. **Load Balancing**: Distribución de carga mediante Service
-
-### Configuración de Recursos
-
-- **Requests**: Recursos garantizados (250m CPU, 256Mi memoria)
-- **Limits**: Límites máximos (500m CPU, 512Mi memoria)
 
 ---
 
@@ -391,36 +265,59 @@ helm/myapp/
 
 ### Cobertura
 
-- **Objetivo**: ≥80% de cobertura de código
-- **Herramienta**: JaCoCo
-- **Reporte**: Generado en cada ejecución del pipeline
-- **Validación**: El pipeline falla si la cobertura es < 80%
+- **Objetivo**: ≥80% de cobertura de código (líneas)
+- **Herramienta**: JaCoCo 0.8.11
+- **Configuración**: 
+  - `rules` definidas en el nivel de `<configuration>` del plugin (disponible para `mvn jacoco:check`)
+  - Excluye clases generadas por Lombok (`**/*$*.class`)
+  - Excluye clase principal `Application.class`
+  - Validación por paquete (`PACKAGE`) con límite mínimo de 80% (`COVEREDRATIO`)
+- **Validación**: 
+  - Primero intenta `mvn jacoco:check` (usa configuración del plugin)
+  - Si falla, parsea manualmente `jacoco.xml` para calcular porcentaje
+  - El pipeline falla si la cobertura es < 80%
+- **Reporte**: Generado en `target/site/jacoco/` en cada ejecución del pipeline
 
 ---
 
 ## ⚠️ Consideraciones Especiales
 
-### Restricción de Push Directo
+### Validación de Cobertura con Fallback
 
-Debido a políticas de la organización, no se puede hacer push directo al repositorio. El workflow está adaptado para:
+El workflow implementa una estrategia de validación de cobertura con fallback:
 
-1. **Generar artifact** con el `values.yaml` actualizado
-2. **Mostrar instrucciones** en el summary del workflow
-3. **Usuario sube manualmente** el archivo por la interfaz web de GitHub
-4. **ArgoCD sincroniza** automáticamente una vez subido
+1. **Primer intento**: Ejecuta `mvn jacoco:check` que usa la configuración de `rules` del plugin
+2. **Fallback manual**: Si `jacoco:check` falla, parsea manualmente el archivo `jacoco.xml` para calcular el porcentaje de cobertura
+3. **Validación**: Compara el porcentaje calculado con el umbral del 80% y falla el pipeline si no se cumple
 
-### Flujo Manual de GitOps
+Esta estrategia asegura que la validación de cobertura funcione incluso si hay problemas con la configuración del plugin.
 
-```
-Pipeline ejecuta → Genera artifact → Usuario descarga → 
-Usuario sube a GitHub → ArgoCD detecta → Sincroniza
-```
+### Actualización Automática de GitOps
+
+El workflow actualiza automáticamente el archivo `helm/myapp/values.yaml` y hace push directo al repositorio:
+
+1. **Extrae SHA corto**: Toma los primeros 7 caracteres del commit SHA
+2. **Actualiza values.yaml**: Reemplaza el tag de la imagen con el nuevo SHA
+3. **Commit y push**: Hace commit con mensaje `[skip ci]` para evitar loops infinitos
+4. **ArgoCD sincroniza**: ArgoCD detecta el cambio automáticamente y despliega la nueva versión
+
+### Secrets de GitHub Actions
+
+Configura los siguientes secrets en GitHub:
+
+- `DOCKERHUB_USERNAME`: Usuario de DockerHub
+- `DOCKERHUB_TOKEN`: Token de acceso de DockerHub
+- `QUAY_USERNAME`: Usuario de Quay.io (alternativa)
+- `QUAY_TOKEN`: Token de acceso de Quay.io (alternativa)
+- `SONAR_TOKEN`: Token de SonarQube (opcional)
+- `SONAR_HOST_URL`: URL de SonarQube (opcional)
+- `SONAR_ORGANIZATION`: Organización de SonarQube (opcional)
 
 ---
 
 ## 📝 Próximos Pasos
 
-### Mejoras Futuras
+### Mejoras Futuras del Pipeline
 
 1. **Observabilidad**:
    - Integración con Prometheus y Grafana
@@ -432,12 +329,7 @@ Usuario sube a GitHub → ArgoCD detecta → Sincroniza
    - Rate limiting
    - WAF (Web Application Firewall)
 
-3. **Performance**:
-   - Caching con Redis
-   - Database connection pooling
-   - CDN para assets estáticos
-
-4. **DevOps**:
+3. **DevOps**:
    - Blue-Green deployments
    - Canary releases
    - Feature flags
@@ -446,15 +338,17 @@ Usuario sube a GitHub → ArgoCD detecta → Sincroniza
 
 ## 📚 Referencias
 
-- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
-- [Arquitectura Hexagonal](https://alistair.cockburn.us/hexagonal-architecture/)
 - [GitOps Principles](https://www.gitops.tech/)
 - [ArgoCD Documentation](https://argo-cd.readthedocs.io/)
 - [Helm Documentation](https://helm.sh/docs/)
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [Docker Documentation](https://docs.docker.com/)
 
 ---
 
-**Última actualización**: 2026-02-08  
+**Última actualización**: 2026-02-09  
 **Versión**: 1.0-SNAPSHOT  
+**Artifact ID**: client-service  
 **Java**: 21  
-**Spring Boot**: 3.2.0
+**Spring Boot**: 3.2.0  
+**JaCoCo**: 0.8.11
