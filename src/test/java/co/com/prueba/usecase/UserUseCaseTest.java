@@ -80,4 +80,72 @@ class UserUseCaseTest {
                 .verifyErrorMatches(ex -> ex instanceof CustomException && ((CustomException) ex).getStatus() == HttpStatus.BAD_REQUEST);
     }
 
+    @Test
+    public void testDocumentTypeValidate_P() {
+        UserRequest requestValid = UserRequest.builder()
+                .documentType(DocumentType.P.name())
+                .documentNumber("23445322")
+                .build();
+        boolean isValid = userUseCase.documentTypeValidate(requestValid);
+        assert (isValid);
+    }
+
+    @Test
+    public void testDocumentTypeValidate_CaseInsensitive() {
+        UserRequest requestLower = UserRequest.builder()
+                .documentType("c")
+                .documentNumber("23445322")
+                .build();
+        boolean isValidLower = userUseCase.documentTypeValidate(requestLower);
+        assert (isValidLower);
+
+        UserRequest requestUpper = UserRequest.builder()
+                .documentType("P")
+                .documentNumber("23445322")
+                .build();
+        boolean isValidUpper = userUseCase.documentTypeValidate(requestUpper);
+        assert (isValidUpper);
+    }
+
+    @Test
+    public void testFindUserByDocument_WithDocumentTypeP() {
+        UserRequest request = UserRequest.builder()
+                .documentType("P")
+                .documentNumber("23445322")
+                .build();
+
+        UserResponse response = UserResponse.builder()
+                .firstName("Daniel")
+                .secondName("Ricardo")
+                .firstLastName("Buritica")
+                .secondLastName("Junco")
+                .phone("3217570485")
+                .address("Calle falsa 123")
+                .residenceCity("Bogota")
+                .build();
+
+        when(userRepository.findByUser(request)).thenReturn(Mono.just(response));
+
+        userUseCase.findUserByDocument(request)
+                .as(StepVerifier::create)
+                .expectNext(response)
+                .verifyComplete();
+    }
+
+    @Test
+    public void testFindUserByDocument_RepositoryError() {
+        UserRequest request = UserRequest.builder()
+                .documentType("C")
+                .documentNumber("23445322")
+                .build();
+
+        CustomException repositoryException = new CustomException(HttpStatus.NOT_FOUND, "User not found");
+        when(userRepository.findByUser(request)).thenReturn(Mono.error(repositoryException));
+
+        userUseCase.findUserByDocument(request)
+                .as(StepVerifier::create)
+                .verifyErrorMatches(ex -> ex instanceof CustomException && 
+                        ((CustomException) ex).getStatus() == HttpStatus.NOT_FOUND);
+    }
+
 }
