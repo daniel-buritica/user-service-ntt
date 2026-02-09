@@ -241,4 +241,4 @@ Este proyecto es parte de un ejercicio de implementación de CI/CD con GitOps.
 
 **Versión**: 1.0-SNAPSHOT  
 **Java**: 21  
-**Spring Boot**: 3.2.0
+**Spring Boot**: 3.2.1
