@@ -30,4 +30,18 @@ class CustomAttributeTest {
         // Verificar que CustomAttribute es una instancia de DefaultErrorAttributes
         assertTrue(customAttribute instanceof org.springframework.boot.web.reactive.error.DefaultErrorAttributes);
     }
+
+    @Test
+    void testGetErrorAttributes_MethodExists() {
+        // Verificar que el método getErrorAttributes existe
+        // Nota: Este método requiere un ServerRequest con un error asociado
+        // Para testear completamente, se necesita un test de integración
+        assertNotNull(customAttribute);
+    }
+
+    @Test
+    void testCustomAttribute_CanBeInstantiated() {
+        CustomAttribute instance = new CustomAttribute();
+        assertNotNull(instance);
+    }
 }

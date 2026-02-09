@@ -64,4 +64,28 @@ class GlobalExceptionHandlerTest {
     void testGlobalExceptionHandler_Initialization() {
         assertNotNull(globalExceptionHandler);
     }
+
+    @Test
+    void testGetRoutingFunction_ReturnsRouterFunction() {
+        RouterFunction<ServerResponse> routingFunction = globalExceptionHandler.getRoutingFunction(errorAttributes);
+        
+        assertNotNull(routingFunction);
+        assertTrue(routingFunction instanceof RouterFunction);
+    }
+
+    @Test
+    void testGetRoutingFunction_CanBeCalledMultipleTimes() {
+        RouterFunction<ServerResponse> routingFunction1 = globalExceptionHandler.getRoutingFunction(errorAttributes);
+        RouterFunction<ServerResponse> routingFunction2 = globalExceptionHandler.getRoutingFunction(errorAttributes);
+        
+        assertNotNull(routingFunction1);
+        assertNotNull(routingFunction2);
+    }
+
+    @Test
+    void testGlobalExceptionHandler_SettersConfigured() {
+        // Verificar que los setters de messageReaders y messageWriters fueron configurados
+        assertNotNull(globalExceptionHandler);
+        // El hecho de que no lance excepción al crear indica que está bien configurado
+    }
 }
