@@ -191,10 +191,10 @@ composition-analysis ────────────┐    update-gitops �
 
 #### Step 5.4: Generate SBOM from Docker image
 - **Para qué sirve:** Generar Software Bill of Materials completo de la imagen Docker publicada
-- **Justificación:**
-    - Debe ejecutarse DESPUÉS de publicar imagen porque analiza la imagen real que se desplegará
-    - Incluye dependencias de aplicación, sistema operativo y runtime
-    - Más completo que SCA sobre código fuente
+- **Justificación:** 
+  - Debe ejecutarse DESPUÉS de publicar imagen porque analiza la imagen real que se desplegará
+  - Incluye dependencias de aplicación, sistema operativo y runtime
+  - Más completo que SCA sobre código fuente
 
 #### Step 5.5: Upload SBOM
 - **Para qué sirve:** Subir SBOM como artifact
