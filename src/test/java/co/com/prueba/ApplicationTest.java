@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
 
@@ -51,8 +51,8 @@ public class ApplicationTest {
 
     @Test
     public void testFindUserByDocumentOk() {
-        when(userRepository.findByUser(argThat(req ->
-                "C".equals(req.getDocumentType()) && "23445322".equals(req.getDocumentNumber())
+        when(userRepository.findByUser(argThat(req -> 
+            "C".equals(req.getDocumentType()) && "23445322".equals(req.getDocumentNumber())
         ))).thenReturn(Mono.just(response));
 
         webTestClient.get()
@@ -87,8 +87,8 @@ public class ApplicationTest {
     }
     @Test
     public void testFindNotUserByDocument() {
-        when(userRepository.findByUser(argThat(req ->
-                "C".equals(req.getDocumentType()) && "12345".equals(req.getDocumentNumber())
+        when(userRepository.findByUser(argThat(req -> 
+            "C".equals(req.getDocumentType()) && "12345".equals(req.getDocumentNumber())
         ))).thenReturn(Mono.error(new CustomException(HttpStatus.NOT_FOUND, "No existe el usuario.")));
 
         webTestClient.get()

@@ -228,19 +228,19 @@ Asegúrate de que estos archivos estén presentes:
 1. Ve a la pestaña **Actions** en GitHub
 2. Deberías ver el workflow ejecutándose
 3. Revisa cada job:
-    - ✅ `test` - Debe pasar con cobertura ≥80%
-    - ✅ `static-analysis` - Debe completarse
-    - ✅ `dynamic-analysis` - Debe completarse
-    - ✅ `composition-analysis` - Debe generar SBOM
-    - ✅ `build-and-push` - Debe construir y subir imagen
-    - ✅ `update-gitops` - Debe actualizar values.yaml
+   - ✅ `test` - Debe pasar con cobertura ≥80%
+   - ✅ `static-analysis` - Debe completarse
+   - ✅ `dynamic-analysis` - Debe completarse
+   - ✅ `composition-analysis` - Debe generar SBOM
+   - ✅ `build-and-push` - Debe construir y subir imagen
+   - ✅ `update-gitops` - Debe actualizar values.yaml
 
 ### 4.2 Verificar Imagen Docker
 
 1. Ve a DockerHub/Quay.io
 2. Deberías ver la imagen `user-service` con tags:
-    - `main-<commit-sha>` (ej: `main-a1b2c3d`)
-    - `latest` (solo en main)
+   - `main-<commit-sha>` (ej: `main-a1b2c3d`)
+   - `latest` (solo en main)
 
 ### 4.3 Verificar Actualización de values.yaml
 
@@ -274,9 +274,9 @@ kubectl apply -f argocd/application.yaml -n argocd
 1. Accede al dashboard de ArgoCD
 2. Deberías ver la aplicación `user-service`
 3. Verifica que:
-    - ✅ Estado: `Synced` y `Healthy`
-    - ✅ Source: Apunta a tu repositorio
-    - ✅ Destination: Apunta a tu cluster/namespace
+   - ✅ Estado: `Synced` y `Healthy`
+   - ✅ Source: Apunta a tu repositorio
+   - ✅ Destination: Apunta a tu cluster/namespace
 
 ### 5.3 Verificar Despliegue en Kubernetes
 
@@ -310,9 +310,9 @@ kubectl get service -n default
 1. Ve a **Actions** en GitHub
 2. Observa cómo se ejecuta el pipeline
 3. Verifica que:
-    - ✅ Todos los jobs pasen
-    - ✅ La imagen se construya con nuevo tag
-    - ✅ `values.yaml` se actualice automáticamente
+   - ✅ Todos los jobs pasen
+   - ✅ La imagen se construya con nuevo tag
+   - ✅ `values.yaml` se actualice automáticamente
 
 ### 6.3 Verificar Sincronización de ArgoCD
 
@@ -331,11 +331,11 @@ kubectl get service -n default
 - Verifica que los secrets `DOCKERHUB_USERNAME` y `DOCKERHUB_TOKEN` estén configurados
 - **IMPORTANTE**: El token debe tener permisos de **Read & Write**, no solo Read
 - Si ves el error `401 Unauthorized: access token has insufficient scopes`:
-    1. Ve a https://hub.docker.com/settings/security
-    2. Elimina el token anterior (si existe)
-    3. Crea un nuevo token con permisos **Read & Write**
-    4. Actualiza el secret `DOCKERHUB_TOKEN` en GitHub con el nuevo token
-    5. Verifica que el `DOCKERHUB_USERNAME` sea correcto (debe ser tu usuario de DockerHub, no tu email)
+  1. Ve a https://hub.docker.com/settings/security
+  2. Elimina el token anterior (si existe)
+  3. Crea un nuevo token con permisos **Read & Write**
+  4. Actualiza el secret `DOCKERHUB_TOKEN` en GitHub con el nuevo token
+  5. Verifica que el `DOCKERHUB_USERNAME` sea correcto (debe ser tu usuario de DockerHub, no tu email)
 
 ### Problema: Coverage < 80%
 
@@ -367,30 +367,30 @@ kubectl get service -n default
 
 **Solución:**
 1. **Verifica que el proyecto esté creado en SonarCloud:**
-    - Ve a https://sonarcloud.io/projects
-    - Si no ves tu proyecto, créalo manualmente (ver sección 1.4)
+   - Ve a https://sonarcloud.io/projects
+   - Si no ves tu proyecto, créalo manualmente (ver sección 1.4)
 
 2. **Verifica los secrets de GitHub:**
-    - `SONAR_TOKEN` debe ser un token válido de SonarCloud
-    - `SONAR_HOST_URL` debe ser `https://sonarcloud.io`
-    - `SONAR_ORGANIZATION` debe ser el nombre exacto de tu organización
+   - `SONAR_TOKEN` debe ser un token válido de SonarCloud
+   - `SONAR_HOST_URL` debe ser `https://sonarcloud.io`
+   - `SONAR_ORGANIZATION` debe ser el nombre exacto de tu organización
 
 3. **Verifica los logs del workflow:**
-    - Ve a **Actions** en GitHub
-    - Revisa el job `static-analysis`
-    - Busca errores relacionados con SonarQube
+   - Ve a **Actions** en GitHub
+   - Revisa el job `static-analysis`
+   - Busca errores relacionados con SonarQube
 
 4. **Verifica que el análisis se haya ejecutado:**
-    - El paso "Run SonarQube Scan" debe completarse sin errores
-    - Si ves "⚠️ SonarQube not configured", verifica los secrets
+   - El paso "Run SonarQube Scan" debe completarse sin errores
+   - Si ves "⚠️ SonarQube not configured", verifica los secrets
 
 5. **Espera unos minutos:**
-    - SonarCloud puede tardar 1-2 minutos en procesar y mostrar el análisis
+   - SonarCloud puede tardar 1-2 minutos en procesar y mostrar el análisis
 
 6. **Verifica el Project Key:**
-    - El Project Key en SonarCloud debe coincidir con el que usas en los secrets
-    - Por defecto, se usa `github.repository` (formato: `usuario/repositorio`)
-    - Puedes verificar el Project Key en: SonarCloud → Tu Proyecto → Project Settings → Key
+   - El Project Key en SonarCloud debe coincidir con el que usas en los secrets
+   - Por defecto, se usa `github.repository` (formato: `usuario/repositorio`)
+   - Puedes verificar el Project Key en: SonarCloud → Tu Proyecto → Project Settings → Key
 
 ---
 

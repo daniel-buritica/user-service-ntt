@@ -42,34 +42,36 @@ El proyecto sigue los principios de la Arquitectura Hexagonal, también conocida
 
 ### Capas del Proyecto
 
-#### 1. **Domain Layer** (`domain/`)
+El proyecto sigue una arquitectura hexagonal pero implementada en un **mono-módulo Maven** para simplificar la estructura y facilitar el mantenimiento.
+
+#### 1. **Domain Layer** (`src/main/java/co/com/prueba/model/` y `usecase/`)
 Contiene la lógica de negocio pura, independiente de frameworks y tecnologías.
 
-- **`domain/model/`**: Modelos de dominio, entidades, DTOs y excepciones
+- **`model/`**: Modelos de dominio, entidades, DTOs y excepciones
   - `UserRequest`, `UserResponse`
   - `DocumentType`
   - `CustomException`, `CustomAttribute`
   - Interfaces de repositorio (`UserRepository`)
 
-- **`domain/usecase/`**: Casos de uso que implementan la lógica de negocio
+- **`usecase/`**: Casos de uso que implementan la lógica de negocio
   - `UserUseCase`: Lógica para consultar usuarios
 
-#### 2. **Application Layer** (`application/`)
+#### 2. **Application Layer** (`src/main/java/co/com/prueba/`)
 Orquesta los casos de uso y configura la aplicación.
 
 - `Application.java`: Punto de entrada principal
-- `ApplicationConfig.java`: Configuración de Spring Boot
-- `application.yml`: Configuración de la aplicación
+- `config/ApplicationConfig.java`: Configuración de Spring Boot
+- `src/main/resources/application.yml`: Configuración de la aplicación
 
-#### 3. **Infrastructure Layer** (`infrastructure/`)
+#### 3. **Infrastructure Layer** (`src/main/java/co/com/prueba/entrypoints/` y `adapter/`)
 Implementa los adaptadores que conectan la aplicación con el mundo exterior.
 
-- **`entry-points/`**: Puntos de entrada (REST API)
-  - `UserRouter`: Configuración de rutas WebFlux
-  - `UserHandler`: Manejo de peticiones HTTP
-  - `GlobalExceptionHandler`: Manejo centralizado de excepciones
+- **`entrypoints/`**: Puntos de entrada (REST API)
+  - `router/UserRouter`: Configuración de rutas WebFlux
+  - `handler/UserHandler`: Manejo de peticiones HTTP
+  - `exception/GlobalExceptionHandler`: Manejo centralizado de excepciones
 
-- **`driven-adapters/`**: Adaptadores para servicios externos
+- **`adapter/`**: Adaptadores para servicios externos
   - `UserServiceAdapter`: Implementación del repositorio de usuarios
 
 ---
@@ -282,7 +284,7 @@ El archivo `argocd/application.yaml` define:
 ```dockerfile
 FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /opt/app
-COPY application/target/application-1.0-SNAPSHOT.jar app.jar
+COPY target/client-service-1.0-SNAPSHOT.jar app.jar
 EXPOSE 8090
 ENV PORT=8090
 ENTRYPOINT ["sh", "-c", "java -jar app.jar"]

@@ -49,7 +49,7 @@ La aplicación estará disponible en: `http://localhost:8090`
 mvn clean package
 ```
 
-El JAR se generará en: `application/target/application-1.0-SNAPSHOT.jar`
+El JAR se generará en: `target/client-service-1.0-SNAPSHOT.jar`
 
 ### Contenedor Docker
 
@@ -127,7 +127,7 @@ mvn test
 mvn test jacoco:report
 
 # Ver reporte de cobertura
-open application/target/site/jacoco/index.html
+open target/site/jacoco/index.html
 ```
 
 ### Cobertura Mínima
@@ -142,15 +142,19 @@ user-service-ntt-main/
 │   ├── workflows/
 │   │   └── triggerci.yml      # Pipeline CI/CD
 │   └── CODEOWNERS             # Configuración de code owners
-├── application/                # Capa de aplicación
-│   ├── src/
-│   └── pom.xml
-├── domain/                     # Capa de dominio
-│   ├── model/                 # Modelos y entidades
-│   └── usecase/               # Casos de uso
-├── infrastructure/              # Capa de infraestructura
-│   ├── entry-points/         # REST API
-│   └── driven-adapters/      # Adaptadores externos
+├── src/
+│   ├── main/
+│   │   ├── java/              # Código fuente
+│   │   │   └── co/com/prueba/
+│   │   │       ├── Application.java
+│   │   │       ├── config/    # Configuración Spring
+│   │   │       ├── model/     # Modelos y entidades
+│   │   │       ├── usecase/   # Casos de uso
+│   │   │       ├── entrypoints/  # REST API (handlers, routers)
+│   │   │       └── adapter/   # Adaptadores externos
+│   │   └── resources/         # Recursos (application.yml, etc.)
+│   └── test/
+│       └── java/              # Tests unitarios
 ├── deployment/
 │   └── Dockerfile             # Dockerfile para la aplicación
 ├── helm/
@@ -162,7 +166,7 @@ user-service-ntt-main/
 │   └── application.yaml      # Manifest de ArgoCD
 ├── docs/
 │   └── arquitectura.md       # Documentación de arquitectura
-├── pom.xml                    # POM principal
+├── pom.xml                    # POM único (mono-módulo)
 └── README.md
 ```
 
@@ -229,9 +233,34 @@ Configura los siguientes secrets en GitHub:
 
 ## 🤝 Contribuir
 
-1. Crea un Pull Request
-2. El pipeline se ejecutará automáticamente
-3. Se requiere aprobación de code owner (según CODEOWNERS)
+Este proyecto acepta contribuciones mediante Pull Requests siguiendo el proceso de GitOps.
+
+### Proceso de Contribución
+
+1. **Crear una rama** desde `main`
+   ```bash
+   git checkout -b feature/mi-nueva-funcionalidad
+   ```
+
+2. **Hacer los cambios** necesarios en el código
+
+3. **Crear un Pull Request** hacia `main`
+   - El pipeline CI/CD se ejecutará automáticamente
+   - Todos los checks deben pasar (tests, análisis, etc.)
+
+4. **Esperar la aprobación** del code owner
+   - Según `.github/CODEOWNERS`, se requiere aprobación de `@daniel-buritica`
+   - GitHub automáticamente solicitará la revisión
+
+5. **Una vez aprobado**, el PR será mergeado a `main`
+   - El pipeline ejecutará el despliegue automático
+   - ArgoCD sincronizará los cambios al cluster
+
+### Code Owners
+
+- **@daniel-buritica** - Owner principal del proyecto
+
+> **Nota**: No se permite hacer push directo a la rama `main`. Todos los cambios deben pasar por Pull Request con aprobación.
 
 ## 📄 Licencia
 
@@ -241,4 +270,4 @@ Este proyecto es parte de un ejercicio de implementación de CI/CD con GitOps.
 
 **Versión**: 1.0-SNAPSHOT  
 **Java**: 21  
-**Spring Boot**: 3.2.1
+**Spring Boot**: 3.2.0

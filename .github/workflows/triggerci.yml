@@ -38,23 +38,23 @@ jobs:
           cache: maven
 
       - name: Run tests with coverage
-        run: mvn clean test jacoco:report
+        run: mvn clean test verify
 
       - name: Validate coverage >= 80%
         run: |
           echo "Running JaCoCo coverage check..."
-          if mvn -pl application jacoco:check; then
+          if mvn jacoco:check; then
             echo "✅ Coverage validation passed (>= 80%)"
           else
             echo "⚠️ jacoco:check failed - checking coverage manually..."
-            JACOCO_XML=$(find application/target -name "jacoco.xml" -type f | head -1)
+            JACOCO_XML=$(find target/site/jacoco -name "jacoco.xml" -type f | head -1)
             if [ -z "$JACOCO_XML" ]; then
               JACOCO_XML=$(find . -name "jacoco.xml" -type f | head -1)
             fi
             if [ -n "$JACOCO_XML" ]; then
               echo "Found JaCoCo XML at: $JACOCO_XML"
-              MISSED=$(grep -oP 'type="INSTRUCTION".*missed="\K[0-9]+' "$JACOCO_XML" | head -1 || echo "0")
-              COVERED=$(grep -oP 'type="INSTRUCTION".*covered="\K[0-9]+' "$JACOCO_XML" | head -1 || echo "0")
+              MISSED=$(sed -n 's/.*counter type="INSTRUCTION" missed="\([0-9]*\)".*/\1/p' "$JACOCO_XML" | tail -1 || echo "0")
+              COVERED=$(sed -n 's/.*counter type="INSTRUCTION".*covered="\([0-9]*\)".*/\1/p' "$JACOCO_XML" | tail -1 || echo "0")
               TOTAL=$((MISSED + COVERED))
               if [ "$TOTAL" -gt 0 ]; then
                 PERCENTAGE=$(awk "BEGIN {printf \"%.2f\", ($COVERED / $TOTAL) * 100}")
@@ -67,12 +67,14 @@ jobs:
                 fi
               else
                 echo "⚠️ No coverage data found, but tests passed"
+                exit 1
               fi
             else
-              echo "⚠️ Could not find jacoco.xml"
+              echo "❌ Could not find jacoco.xml"
               echo "Searching for coverage reports..."
               find . -name "jacoco.xml" -type f
-              echo "⚠️ Coverage check skipped - no jacoco.xml found"
+              echo "❌ Coverage check failed - no jacoco.xml found"
+              exit 1
             fi
           fi
 
@@ -81,8 +83,8 @@ jobs:
         with:
           name: coverage-report
           path: |
-            **/target/site/jacoco/
-            **/target/surefire-reports/
+            target/site/jacoco/
+            target/surefire-reports/
 
   static-analysis:
     name: Static Code Analysis
@@ -125,9 +127,9 @@ jobs:
               -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
               -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
               -Dsonar.java.coveragePlugin=jacoco \
-              -Dsonar.coverage.jacoco.xmlReportPaths=**/target/site/jacoco/jacoco.xml \
-              -Dsonar.sources=application/src/main,domain,infrastructure \
-              -Dsonar.tests=application/src/test,domain/usecase/src/test \
+              -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+              -Dsonar.sources=src/main \
+              -Dsonar.tests=src/test \
               -Dsonar.sourceEncoding=UTF-8
           else
             echo "⚠️ SonarQube not configured. Skipping scan."
