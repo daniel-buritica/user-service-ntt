@@ -7,7 +7,7 @@ replicaCount: 2
 image:
   repository: docker.io/dburitic/user-service
   pullPolicy: IfNotPresent
-  tag: "1ff9bf5"
+  tag: "bfc610a"
 
 imagePullSecrets: []
 nameOverride: ""
