@@ -2,7 +2,7 @@
 
 Este proyecto implementa un microservicio REST para consultar la información básica de un usuario, con un pipeline completo de CI/CD usando GitHub Actions y despliegue automatizado mediante GitOps con ArgoCD.
 
-## 🚀 Características
+## Características
 
 - **Arquitectura Hexagonal**: Implementación con Clean Architecture para mantener desacoplados los componentes
 - **Spring Boot 3.2.0**: Framework reactivo con WebFlux
@@ -13,7 +13,7 @@ Este proyecto implementa un microservicio REST para consultar la información b�
 - **Testing**: Pruebas unitarias con cobertura ≥80%
 - **Análisis de Seguridad**: CodeQL, Trivy, SBOM
 
-## 📋 Requisitos
+## Requisitos
 
 - **Java 21** (LTS)
 - **Maven 3.9+**
@@ -21,7 +21,7 @@ Este proyecto implementa un microservicio REST para consultar la información b�
 - **Kubernetes** con ArgoCD instalado (para despliegue)
 - **Cuenta de DockerHub o Quay.io** (para registry de imágenes)
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 El proyecto sigue una **Arquitectura Hexagonal (Clean Architecture)** con las siguientes capas:
 
@@ -67,7 +67,7 @@ Documentación de la API disponible en:
 - Swagger UI: `http://localhost:8090/swagger-doc/swagger-ui.html`
 - API Docs: `http://localhost:8090/swagger-doc/v3/api-docs`
 
-## 🔄 Pipeline CI/CD
+## Pipeline CI/CD
 
 El proyecto incluye un pipeline completo de CI/CD que se ejecuta automáticamente en:
 
@@ -87,7 +87,7 @@ El proyecto incluye un pipeline completo de CI/CD que se ejecuta automáticament
 
 Para configurar el pipeline, consulta [CONFIGURACION.md](CONFIGURACION.md)
 
-## 📦 Despliegue con GitOps
+## Despliegue con GitOps
 
 El proyecto utiliza **GitOps** con ArgoCD para el despliegue automatizado:
 
@@ -115,7 +115,7 @@ Aplicar el manifest de ArgoCD:
 kubectl apply -f argocd/application.yaml
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Ejecutar Pruebas
 
@@ -170,7 +170,7 @@ user-service-ntt-main/
 └── README.md
 ```
 
-## 🔧 Configuración
+## Configuración
 
 ### Variables de Entorno
 
@@ -191,7 +191,7 @@ Configura los siguientes secrets en GitHub:
 - `SONAR_HOST_URL`: URL de SonarQube (opcional)
 - `SONAR_ORGANIZATION`: Organización de SonarQube (opcional)
 
-## 📖 Documentación
+## Documentación
 
 - [Guía de Configuración](CONFIGURACION.md) - Pasos detallados para configurar el proyecto
 - [Arquitectura](docs/arquitectura.md) - Documentación completa de la arquitectura
@@ -223,51 +223,10 @@ Configura los siguientes secrets en GitHub:
 - **Trivy** (Análisis dinámico)
 - **Syft** (SBOM)
 
-## 📝 Próximos Pasos
 
-1. **Configurar Secrets**: Ve a [CONFIGURACION.md](CONFIGURACION.md) para configurar los secrets
-2. **Actualizar Valores**: Actualiza `values.yaml` y `application.yaml` con tus valores
-3. **Subir a GitHub**: Sube todos los archivos al repositorio
-4. **Verificar Pipeline**: Revisa que el pipeline se ejecute correctamente
-5. **Configurar ArgoCD**: Aplica el manifest de ArgoCD en tu cluster
 
-## 🤝 Contribuir
 
-Este proyecto acepta contribuciones mediante Pull Requests siguiendo el proceso de GitOps.
-
-### Proceso de Contribución
-
-1. **Crear una rama** desde `main`
-   ```bash
-   git checkout -b feature/mi-nueva-funcionalidad
-   ```
-
-2. **Hacer los cambios** necesarios en el código
-
-3. **Crear un Pull Request** hacia `main`
-   - El pipeline CI/CD se ejecutará automáticamente
-   - Todos los checks deben pasar (tests, análisis, etc.)
-
-4. **Esperar la aprobación** del code owner
-   - Según `.github/CODEOWNERS`, se requiere aprobación de `@daniel-buritica`
-   - GitHub automáticamente solicitará la revisión
-
-5. **Una vez aprobado**, el PR será mergeado a `main`
-   - El pipeline ejecutará el despliegue automático
-   - ArgoCD sincronizará los cambios al cluster
 
 ### Code Owners
 
 - **@daniel-buritica** - Owner principal del proyecto
-
-> **Nota**: No se permite hacer push directo a la rama `main`. Todos los cambios deben pasar por Pull Request con aprobación.
-
-## 📄 Licencia
-
-Este proyecto es parte de un ejercicio de implementación de CI/CD con GitOps.
-
----
-
-**Versión**: 1.0-SNAPSHOT  
-**Java**: 21  
-**Spring Boot**: 3.2.0

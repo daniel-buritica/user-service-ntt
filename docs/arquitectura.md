@@ -1,6 +1,6 @@
-# 🚀 Pipeline CI/CD - Client Service
+# Pipeline CI/CD - Client Service
 
-## 📋 Resumen Ejecutivo
+## Resumen Ejecutivo
 
 Este proyecto implementa un **pipeline completo de CI/CD** con GitHub Actions para un microservicio Spring Boot. El pipeline incluye pruebas automatizadas, análisis de código, construcción de imágenes Docker, y despliegue automatizado mediante GitOps con ArgoCD.
 
@@ -12,7 +12,7 @@ Este proyecto implementa un **pipeline completo de CI/CD** con GitHub Actions pa
 
 ---
 
-## 🚀 Pipeline CI/CD
+## Pipeline CI/CD
 
 ### Arquitectura del Pipeline
 
@@ -127,7 +127,7 @@ Este proyecto implementa un **pipeline completo de CI/CD** con GitHub Actions pa
 
 ---
 
-## 🔄 Flujo GitOps con ArgoCD
+## Flujo GitOps con ArgoCD
 
 ### Principios GitOps
 
@@ -173,7 +173,7 @@ El archivo `argocd/application.yaml` define:
 
 ---
 
-## 🐳 Containerización
+## Containerización
 
 ### Dockerfile
 
@@ -194,7 +194,7 @@ ENTRYPOINT ["sh", "-c", "java -jar app.jar"]
 
 ---
 
-## ☸️ Helm Chart
+## Helm Chart
 
 ### Estructura
 
@@ -219,7 +219,7 @@ helm/myapp/
 
 ---
 
-## 📊 Stack Tecnológico CI/CD
+## Stack Tecnológico CI/CD
 
 ### CI/CD
 - **GitHub Actions**: Automatización del pipeline
@@ -243,7 +243,7 @@ helm/myapp/
 
 ---
 
-## 🔐 Seguridad en el Pipeline
+## Seguridad en el Pipeline
 
 ### Implementaciones de Seguridad
 
@@ -255,7 +255,7 @@ helm/myapp/
 
 ---
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
 ### Niveles de Prueba
 
@@ -280,17 +280,7 @@ helm/myapp/
 
 ---
 
-## ⚠️ Consideraciones Especiales
 
-### Validación de Cobertura con Fallback
-
-El workflow implementa una estrategia de validación de cobertura con fallback:
-
-1. **Primer intento**: Ejecuta `mvn jacoco:check` que usa la configuración de `rules` del plugin
-2. **Fallback manual**: Si `jacoco:check` falla, parsea manualmente el archivo `jacoco.xml` para calcular el porcentaje de cobertura
-3. **Validación**: Compara el porcentaje calculado con el umbral del 80% y falla el pipeline si no se cumple
-
-Esta estrategia asegura que la validación de cobertura funcione incluso si hay problemas con la configuración del plugin.
 
 ### Actualización Automática de GitOps
 
@@ -311,44 +301,4 @@ Configura los siguientes secrets en GitHub:
 - `QUAY_TOKEN`: Token de acceso de Quay.io (alternativa)
 - `SONAR_TOKEN`: Token de SonarQube (opcional)
 - `SONAR_HOST_URL`: URL de SonarQube (opcional)
-- `SONAR_ORGANIZATION`: Organización de SonarQube (opcional)
-
----
-
-## 📝 Próximos Pasos
-
-### Mejoras Futuras del Pipeline
-
-1. **Observabilidad**:
-   - Integración con Prometheus y Grafana
-   - Distributed tracing con Jaeger
-   - Logging centralizado con ELK Stack
-
-2. **Seguridad**:
-   - Implementar OAuth2/JWT
-   - Rate limiting
-   - WAF (Web Application Firewall)
-
-3. **DevOps**:
-   - Blue-Green deployments
-   - Canary releases
-   - Feature flags
-
----
-
-## 📚 Referencias
-
-- [GitOps Principles](https://www.gitops.tech/)
-- [ArgoCD Documentation](https://argo-cd.readthedocs.io/)
-- [Helm Documentation](https://helm.sh/docs/)
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [Docker Documentation](https://docs.docker.com/)
-
----
-
-**Última actualización**: 2026-02-09  
-**Versión**: 1.0-SNAPSHOT  
-**Artifact ID**: client-service  
-**Java**: 21  
-**Spring Boot**: 3.2.0  
-**JaCoCo**: 0.8.11
+  - `SONAR_ORGANIZATION`: Organización de SonarQube (opcional)
